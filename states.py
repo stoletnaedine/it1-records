@@ -32,6 +32,7 @@ class IdeaReplyForm(StatesGroup):
     message = State()
 
 class AddReleaseForm(StatesGroup):
+    selecting_artist = State()
     release_name = State()
     description = State()
     genre = State()

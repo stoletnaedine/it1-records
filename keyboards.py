@@ -45,3 +45,15 @@ def admin_menu():
         [KeyboardButton(text="🧪 Создать моки"), KeyboardButton(text="❌ Удалить моки")],
         [KeyboardButton(text="⬅️ Назад")]
     ], resize_keyboard=True)
+
+def artist_select_buttons(artists):
+    """Кнопки для выбора артиста"""
+    kb = InlineKeyboardMarkup(inline_keyboard=[])
+    for artist_id, project_name in artists:
+        kb.inline_keyboard.append([
+            InlineKeyboardButton(
+                text=f"🎵 {project_name}",
+                callback_data=f"selectartist_{artist_id}"
+            )
+        ])
+    return kb

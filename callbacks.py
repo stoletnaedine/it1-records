@@ -177,6 +177,17 @@ async def reject_release_reason(message: types.Message, state: FSMContext):
             await message.bot.send_message(user_id, f"❌ <b>Твоя заявка на релиз #{release_id} отклонена</b>\n\n<b>Причина:</b>\n{reason}", parse_mode="HTML")
         except: pass
 
+@router.callback_query(lambda c: c.data.startswith("selectartist_"))
+async def select_artist_for_release(callback_query: types.CallbackQuery, state: FSMContext):
+    """Выбор артиста для релиза"""
+    artist_id = int(callback_query.data.split("_")[1])
+    
+    await state.update_data(artist_id=artist_id)
+    await state.set_state(AddReleaseForm.release_name)
+    
+    await callback_query.message.edit_text("📀 <b>Анонс нового релиза</b>\n\nНазвание релиза:", parse_mode="HTML", reply_markup=cancel_keyboard())
+    await callback_query.answer()
+
 # ══════════ ADMIN: IDEAS ══════════
 
 async def admin_idea_detail(callback_query: types.CallbackQuery):
