@@ -31,7 +31,7 @@ def format_artist(data, show_id=False):
 def format_artist_with_reactions(artist_id, data):
     """Форматирование артиста с реакциями и релизами"""
     aid, project_name, description, links, genre, about = data[:6]
-    card = f"🎵 <b>{project_name}</b> <code>#{aid}</code>\n"
+    card = f"🎵 <b>{project_name}</b>\n"
     card += f"📝 {esc(description)}\n🎼 {genre}"
     if about:
         card += f"\n📌 {esc(about)}"

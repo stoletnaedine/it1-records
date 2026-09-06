@@ -341,12 +341,12 @@ async def main():
         # CALLBACKS: ARTIST DETAIL
         dp.callback_query.register(artist_detail, F.data.startswith("artist_"))
         
-        # CALLBACKS: APPLICATIONS
+        # CALLBACKS: APPLICATIONS (регистрируй ПОСЛЕ специфичных!)
         dp.callback_query.register(admin_app_detail, F.data.startswith("app_"))
-        dp.callback_query.register(approve_app_callback, F.data.startswith("approve_"))
-        dp.callback_query.register(reject_app_callback, F.data.startswith("reject_"))
+        dp.callback_query.register(approve_app_callback, F.data.startswith("approve_") & ~F.data.startswith("approve_rel_"))
+        dp.callback_query.register(reject_app_callback, F.data.startswith("reject_") & ~F.data.startswith("reject_rel_"))
         
-        # CALLBACKS: RELEASES
+        # CALLBACKS: RELEASES (регистрируй ПЕРВЫМИ - более специфичные!)
         dp.callback_query.register(admin_release_detail, F.data.startswith("release_"))
         dp.callback_query.register(approve_release_callback, F.data.startswith("approve_rel_"))
         dp.callback_query.register(reject_release_callback, F.data.startswith("reject_rel_"))
