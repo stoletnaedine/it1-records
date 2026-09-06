@@ -1,8 +1,8 @@
 """Конфигурация бота"""
 import os
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_TOKEN")
-ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "123456789").split(",")]
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8789051616:AAFGFXkQkq8gt7m4ZVBf-SN3Ewe4TMAZb6s")
+ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "554401").split(",")]
 DB_PATH = "it1_records.db"
 
 GENRES = ["🎸 Рок", "🔊 Электроника", "🎵 Поп", "🎹 Инди"]
