@@ -415,13 +415,14 @@ def close_idea(idea_id):
     c.close()
     conn.close()
 
-    # ══════════════════ ARTIST RELEASES ══════════════════
-
-def get_artist_releases(artist_id):
+def get_artist_releases(artist_id, limit=None):
     """Получить релизы артиста"""
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT id, release_name, description, genre, links, created_at FROM releases WHERE artist_id = %s AND status = 'approved' ORDER BY created_at DESC", (artist_id,))
+    if limit:
+        c.execute("SELECT id, release_name, description, genre, links, created_at FROM releases WHERE artist_id = %s AND status = 'approved' ORDER BY created_at DESC LIMIT %s", (artist_id, limit))
+    else:
+        c.execute("SELECT id, release_name, description, genre, links, created_at FROM releases WHERE artist_id = %s AND status = 'approved' ORDER BY created_at DESC", (artist_id,))
     releases = c.fetchall()
     c.close()
     conn.close()
