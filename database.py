@@ -251,12 +251,21 @@ def create_artist(tg_user_id, tg_username, project_name, description, links, gen
         return False
 
 def delete_artist(artist_id):
+    """Удаление артиста и его релизов"""
     conn = get_connection()
     c = conn.cursor()
-    c.execute("DELETE FROM artists WHERE id = %s", (artist_id,))
-    conn.commit()
-    c.close()
-    conn.close()
+    try:
+        # Сначала удаляем все релизы артиста
+        c.execute("DELETE FROM releases WHERE artist_id = %s", (artist_id,))
+        
+        # Потом удаляем самого артиста
+        c.execute("DELETE FROM artists WHERE id = %s", (artist_id,))
+        conn.commit()
+        return True
+    except Exception as e:
+        conn.rollback()
+        print(f"❌ Ошибка удаления артиста: {e}")
+        return False
 
 def update_artist_field(artist_id, field, value):
     conn = get_connection()

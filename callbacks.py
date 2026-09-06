@@ -282,6 +282,10 @@ async def admin_edit_field(callback_query: types.CallbackQuery, state: FSMContex
     artist_id = int(parts[1])
     field = parts[2]
     
+    # Backward compatibility — если старый callback 'project', заменяем на 'project_name'
+    if field == 'project':
+        field = 'project_name'
+    
     await state.update_data(artist_id=artist_id, field=field)
     await state.set_state(EditArtistForm.value)
     
