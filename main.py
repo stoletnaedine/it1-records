@@ -228,8 +228,13 @@ async def message_handler(message, state):
             await cmd_random(message)
         elif message.text == "🎼 Выбрать по жанру":
             await cmd_by_genre(message)
-        elif message.text == "➕ Добавить артиста":
+        elif message.text == "✨ Добавить артиста":
             await cmd_add_start(message, state)
+        elif message.text == "⬅️ Назад":
+            if is_admin(message.from_user.id):
+                await admin_panel(message)
+            else:
+                await cmd_start(message, state)
         elif message.text == "📋 Весь каталог":
             await cmd_all_catalog(message)
         elif message.text == "📀 Анонсировать релиз":
