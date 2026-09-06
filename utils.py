@@ -15,7 +15,18 @@ def normalize_links(text):
 
 def format_artist(data, show_id=False):
     """Форматирование профиля артиста"""
-    aid, project_name, description, links, genre, about = data[:6]
+    # Если это словарь
+    if isinstance(data, dict):
+        aid = data.get('id')
+        project_name = data.get('project_name')
+        description = data.get('description')
+        links = data.get('links', '')
+        genre = data.get('genre')
+        about = data.get('about')
+    # Если это кортеж/список
+    else:
+        aid, project_name, description, links, genre, about = data[:6]
+    
     card = f"🎵 <b>{project_name}</b>"
     if show_id: 
         card += f" <code>#{aid}</code>"
@@ -28,9 +39,21 @@ def format_artist(data, show_id=False):
             card += f"🔗 {esc(link.strip())}\n"
     return card.strip()
 
+
 def format_artist_with_reactions(artist_id, data):
     """Форматирование артиста с реакциями и релизами"""
-    aid, project_name, description, links, genre, about = data[:6]
+    # Если это словарь
+    if isinstance(data, dict):
+        aid = data.get('id')
+        project_name = data.get('project_name')
+        description = data.get('description')
+        links = data.get('links', '')
+        genre = data.get('genre')
+        about = data.get('about')
+    # Если это кортеж/список
+    else:
+        aid, project_name, description, links, genre, about = data[:6]
+    
     card = f"🎵 <b>{project_name}</b>\n"
     card += f"📝 {esc(description)}\n🎼 {genre}"
     if about:
