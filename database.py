@@ -414,3 +414,15 @@ def close_idea(idea_id):
     conn.commit()
     c.close()
     conn.close()
+
+    # ══════════════════ ARTIST RELEASES ══════════════════
+
+def get_artist_releases(artist_id):
+    """Получить релизы артиста"""
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT id, release_name, description, genre, links, created_at FROM releases WHERE artist_id = %s AND status = 'approved' ORDER BY created_at DESC", (artist_id,))
+    releases = c.fetchall()
+    c.close()
+    conn.close()
+    return releases
