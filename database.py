@@ -54,6 +54,7 @@ def init_db():
         id SERIAL PRIMARY KEY,
         artist_id INTEGER,
         tg_user_id BIGINT,
+        project_name TEXT,
         release_name TEXT,
         description TEXT,
         genre TEXT,

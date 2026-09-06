@@ -186,7 +186,7 @@ async def add_about(message: types.Message, state: FSMContext):
 async def cmd_release_start(message: types.Message, state: FSMContext):
     artist = get_artist_by_user_id(message.from_user.id)
     if not artist:
-        await message.answer("❌ Сначала добавь себя в каталог через «✨ Добавить артиста»", reply_markup=main_menu(is_admin(message.from_user.id)))
+        await message.answer("❌ Сначала добавь себя в каталог через «✨ Добавить артиста» или дождись одобрения заявки", reply_markup=main_menu(is_admin(message.from_user.id)))
         return
     
     await state.update_data(artist_id=artist[0])
