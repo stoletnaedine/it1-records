@@ -17,7 +17,7 @@ def init_db():
     
     c.execute("""CREATE TABLE IF NOT EXISTS applications (
         id SERIAL PRIMARY KEY,
-        tg_user_id INTEGER,
+        tg_user_id BIGINT,
         tg_username TEXT,
         project_name TEXT,
         description TEXT,
@@ -31,7 +31,7 @@ def init_db():
     
     c.execute("""CREATE TABLE IF NOT EXISTS artists (
         id SERIAL PRIMARY KEY,
-        tg_user_id INTEGER,
+        tg_user_id BIGINT,
         tg_username TEXT,
         project_name TEXT UNIQUE,
         description TEXT,
@@ -44,7 +44,7 @@ def init_db():
     c.execute("""CREATE TABLE IF NOT EXISTS reactions (
         id SERIAL PRIMARY KEY,
         artist_id INTEGER,
-        user_id INTEGER,
+        user_id BIGINT,
         reaction TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(artist_id, user_id)
@@ -53,7 +53,7 @@ def init_db():
     c.execute("""CREATE TABLE IF NOT EXISTS releases (
         id SERIAL PRIMARY KEY,
         artist_id INTEGER,
-        tg_user_id INTEGER,
+        tg_user_id BIGINT,
         release_name TEXT,
         description TEXT,
         genre TEXT,
@@ -67,13 +67,13 @@ def init_db():
     
     c.execute("""CREATE TABLE IF NOT EXISTS bot_users (
         id SERIAL PRIMARY KEY,
-        tg_user_id INTEGER UNIQUE,
+        tg_user_id BIGINT UNIQUE,
         joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )""")
     
     c.execute("""CREATE TABLE IF NOT EXISTS ideas (
         id SERIAL PRIMARY KEY,
-        tg_user_id INTEGER,
+        tg_user_id BIGINT,
         tg_username TEXT,
         idea_text TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -83,7 +83,7 @@ def init_db():
     c.execute("""CREATE TABLE IF NOT EXISTS idea_messages (
         id SERIAL PRIMARY KEY,
         idea_id INTEGER,
-        from_user_id INTEGER,
+        from_user_id BIGINT,
         message_text TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(idea_id) REFERENCES ideas(id)
