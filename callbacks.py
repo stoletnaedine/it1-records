@@ -177,7 +177,6 @@ async def reject_release_reason(message: types.Message, state: FSMContext):
             await message.bot.send_message(user_id, f"❌ <b>Твоя заявка на релиз #{release_id} отклонена</b>\n\n<b>Причина:</b>\n{reason}", parse_mode="HTML")
         except: pass
 
-@router.callback_query(lambda c: c.data.startswith("selectartist_"))
 async def select_artist_for_release(callback_query: types.CallbackQuery, state: FSMContext):
     """Выбор артиста для релиза"""
     artist_id = int(callback_query.data.split("_")[1])

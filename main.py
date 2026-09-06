@@ -30,7 +30,8 @@ from callbacks import (
     admin_release_detail, approve_release_callback, reject_release_callback, reject_release_reason,
     admin_idea_detail, admin_idea_reply, admin_idea_reply_message, admin_idea_close,
     admin_edit_select, admin_edit_field, admin_edit_value, admin_edit_genre_callback, admin_edit_cancel,
-    admin_delete_confirm, admin_delete_exec, admin_delete_cancel, admin_create_mocks, admin_delete_mocks
+    admin_delete_confirm, admin_delete_exec, admin_delete_cancel, admin_create_mocks, admin_delete_mocks,
+    select_artist_for_release
 )
 from keyboards import main_menu, admin_menu, cancel_keyboard, genre_buttons, skip_button
 from utils import is_admin, normalize_links
