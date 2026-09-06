@@ -39,8 +39,8 @@ from database import (
     create_artist, get_artist_by_user_id, add_application
 )
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import sqlite3
-from config import DB_PATH
+import psycopg2
+from config import DATABASE_URL
 
 # Глобальный error handler
 error_handler = None
@@ -104,21 +104,43 @@ async def admin_stats(message):
         await message.answer("❌ Доступ запрещен")
         return
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = psycopg2.connect(DATABASE_URL)
         c = conn.cursor()
-        total = c.execute("SELECT COUNT(*) FROM artists").fetchone()[0]
-        pending = c.execute("SELECT COUNT(*) FROM applications WHERE status = 'pending'").fetchone()[0]
-        approved = c.execute("SELECT COUNT(*) FROM applications WHERE status = 'approved'").fetchone()[0]
-        rejected = c.execute("SELECT COUNT(*) FROM applications WHERE status = 'rejected'").fetchone()[0]
-        releases_pending = c.execute("SELECT COUNT(*) FROM releases WHERE status = 'pending'").fetchone()[0]
-        releases_approved = c.execute("SELECT COUNT(*) FROM releases WHERE status = 'approved'").fetchone()[0]
-        genres = c.execute("SELECT genre, COUNT(*) FROM artists GROUP BY genre").fetchall()
-        open_ideas = c.execute("SELECT COUNT(*) FROM ideas WHERE status = 'open'").fetchone()[0]
-        bot_users_count = c.execute("SELECT COUNT(*) FROM bot_users").fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM artists")
+        total = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM applications WHERE status = 'pending'")
+        pending = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM applications WHERE status = 'approved'")
+        approved = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM applications WHERE status = 'rejected'")
+        rejected = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM releases WHERE status = 'pending'")
+        releases_pending = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM releases WHERE status = 'approved'")
+        releases_approved = c.fetchone()[0]
+        
+        c.execute("SELECT genre, COUNT(*) FROM artists GROUP BY genre")
+        genres = c.fetchall()
+        
+        c.execute("SELECT COUNT(*) FROM ideas WHERE status = 'open'")
+        open_ideas = c.fetchone()[0]
+        
+        c.execute("SELECT COUNT(*) FROM bot_users")
+        bot_users_count = c.fetchone()[0]
+        
+        c.close()
         conn.close()
+        
         text = f"📊 <b>Статистика it1-records</b>\n\n🎵 Всего артистов: <b>{total}</b>\n📋 Заявок артистов (ожидают): <b>{pending}</b>\n✅ Одобрено: <b>{approved}</b>\n❌ Отклонено: <b>{rejected}</b>\n\n📀 Заявок релизов (ожидают): <b>{releases_pending}</b>\n✅ Релизов одобрено: <b>{releases_approved}</b>\n\n👥 Пользователей бота: <b>{bot_users_count}</b>\n💡 Открытых идей: <b>{open_ideas}</b>\n\n<b>По жанрам:</b>\n"
         for g, cnt in genres:
             text += f"{g}: {cnt}\n"
+        
         await message.answer(text, reply_markup=admin_menu(), parse_mode="HTML")
     except Exception as e:
         logger.error(f"Error in admin_stats: {e}")

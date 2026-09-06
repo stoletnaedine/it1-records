@@ -1,8 +1,12 @@
-"""Функции для работы с моками (тестовые данные)"""
-import sqlite3
-from config import DB_PATH
+"""Функции для работы с мокаками (тестовые данные)"""
+import psycopg2
+from config import DATABASE_URL
 
 MOCK_PREFIX = "MOCK_TEST_"
+
+def get_connection():
+    """Получить подключение к БД"""
+    return psycopg2.connect(DATABASE_URL)
 
 def create_mock_artists():
     """Создать 10 тестовых артистов"""
@@ -19,7 +23,7 @@ def create_mock_artists():
         ("Crimson Waves", "Альтернативный поп", "https://bandcamp.com/crimsonwaves, https://youtube.com/@crimsonwaves", "pop", "Авторская музыка с глубокими текстами"),
     ]
     
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     c = conn.cursor()
     added = 0
     
@@ -28,39 +32,45 @@ def create_mock_artists():
             tg_username = f"{MOCK_PREFIX}{i+1}"
             tg_user_id = -1000 - i  # Отрицательные ID для моков
             c.execute(
-                "INSERT INTO artists (tg_user_id, tg_username, project_name, description, links, genre, about) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO artists (tg_user_id, tg_username, project_name, description, links, genre, about) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                 (tg_user_id, tg_username, project_name, description, links, genre, about)
             )
             added += 1
-        except sqlite3.IntegrityError:
-            pass
+        except psycopg2.IntegrityError:
+            conn.rollback()
     
     conn.commit()
+    c.close()
     conn.close()
     return added
 
 def delete_mock_artists():
     """Удалить все тестовые артистов"""
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     c = conn.cursor()
     
     # Найди все моки по префиксу
-    mocks = c.execute("SELECT id FROM artists WHERE tg_username LIKE ?", (f"{MOCK_PREFIX}%",)).fetchall()
+    c.execute("SELECT id FROM artists WHERE tg_username LIKE %s", (f"{MOCK_PREFIX}%",))
+    mocks = c.fetchall()
     
     # Удали реакции на моков
     for (mock_id,) in mocks:
-        c.execute("DELETE FROM reactions WHERE artist_id = ?", (mock_id,))
+        c.execute("DELETE FROM reactions WHERE artist_id = %s", (mock_id,))
     
     # Удали моков
-    c.execute("DELETE FROM artists WHERE tg_username LIKE ?", (f"{MOCK_PREFIX}%",))
+    c.execute("DELETE FROM artists WHERE tg_username LIKE %s", (f"{MOCK_PREFIX}%",))
     
     conn.commit()
+    c.close()
     conn.close()
     return len(mocks)
 
 def get_mock_count():
     """Получить количество текущих моков"""
-    conn = sqlite3.connect(DB_PATH)
-    count = conn.cursor().execute("SELECT COUNT(*) FROM artists WHERE tg_username LIKE ?", (f"{MOCK_PREFIX}%",)).fetchone()[0]
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM artists WHERE tg_username LIKE %s", (f"{MOCK_PREFIX}%",))
+    count = c.fetchone()[0]
+    c.close()
     conn.close()
     return count
