@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  it1-records:
+    build: .
+    container_name: it1-records-bot
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      ADMIN_IDS: ${ADMIN_IDS}
+    restart: always
+    volumes:
+      - ./it1_records.db:/app/it1_records.db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
