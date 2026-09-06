@@ -105,7 +105,7 @@ async def artist_detail(callback_query: types.CallbackQuery):
 
 async def cmd_add_start(message: types.Message, state: FSMContext):
     await state.set_state(AddArtistForm.project_name)
-    await message.answer("➕ <b>Добавить артиста</b>\n\nКак называется твой проект?", reply_markup=cancel_keyboard(), parse_mode="HTML")
+    await message.answer("✨ <b>Добавить артиста</b>\n\nКак называется твой проект?", reply_markup=cancel_keyboard(), parse_mode="HTML")
 
 async def add_project_name(message: types.Message, state: FSMContext):
     if message.text == "❌ Отмена":
@@ -186,7 +186,7 @@ async def add_about(message: types.Message, state: FSMContext):
 async def cmd_release_start(message: types.Message, state: FSMContext):
     artist = get_artist_by_user_id(message.from_user.id)
     if not artist:
-        await message.answer("❌ Сначала добавь себя в каталог через «➕ Добавить артиста»", reply_markup=main_menu(is_admin(message.from_user.id)))
+        await message.answer("❌ Сначала добавь себя в каталог через «✨ Добавить артиста»", reply_markup=main_menu(is_admin(message.from_user.id)))
         return
     
     await state.update_data(artist_id=artist[0])
@@ -276,9 +276,10 @@ async def idea_text(message: types.Message, state: FSMContext):
 # ══════════════════ RESTART ══════════════════
 
 async def cmd_restart(message: types.Message, state: FSMContext):
-    """Перезагрузить бота для пользователя (очистить состояние и вернуться в главное меню)"""
+    """Перезагрузить бота для пользователя - обновить кнопки"""
     await state.clear()
     is_admin_user = is_admin(message.from_user.id)
+    
     text = """👋 Добро пожаловать в <b>it1-records</b> — музыкальный каталог нашей компании!
 
 🎵 <b>Что здесь можно делать:</b>
@@ -293,10 +294,14 @@ async def cmd_restart(message: types.Message, state: FSMContext):
 Делаешь музыку? Подай заявку — после модерации ты попадёшь в каталог.
 
 📀 <b>Анонсируй новые релизы</b>
-Вышел свежий трек? Расскажи всем через бота — релизы разлетяются по команде.
+Вышел свежий трек? Расскажи всем через бота — релизы разлетаются по команде.
 
 💡 <b>Предлагай идеи</b>
 Есть мысли, как улучшить бот? Пиши прямо сюда — админ ответит.
 """
-    if is_admin_user: text += "\n🛠️ <b>Админ-панель</b> — управление заявками, артистами и релизами."
-    await message.answer(text, reply_markup=main_menu(is_admin_user), parse_mode="HTML")
+    if is_admin_user: 
+        text += "\n🛠️ <b>Админ-панель</b> — управление заявками, артистами и релизами."
+    
+    # Явно передаём is_admin_user в main_menu
+    keyboard = main_menu(is_admin_user)
+    await message.answer(text, reply_markup=keyboard, parse_mode="HTML")

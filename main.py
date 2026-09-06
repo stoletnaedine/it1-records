@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # Импорты обработчиков
 from states import *
 from handlers import (
-    cmd_start, cmd_random, cmd_by_genre, genre_callback, cmd_all_catalog, artist_detail,
+    cmd_start, cmd_restart, cmd_random, cmd_by_genre, genre_callback, cmd_all_catalog, artist_detail,
     cmd_add_start, add_project_name, add_description, add_links, add_genre_callback, add_about,
     cmd_release_start, release_name, release_description, release_genre_callback, release_links,
     cmd_idea_start, idea_text
@@ -123,13 +123,6 @@ async def admin_stats(message):
     except Exception as e:
         logger.error(f"Error in admin_stats: {e}")
         await message.answer("❌ Ошибка при загрузке статистики")
-
-async def admin_create_start(message, state):
-    if not is_admin(message.from_user.id):
-        await message.answer("❌ Доступ запрещен")
-        return
-    await state.set_state(CreateArtistForm.project_name)
-    await message.answer("➕ <b>Создание нового артиста</b>\n\nНазвание проекта:", reply_markup=cancel_keyboard(), parse_mode="HTML")
 
 async def create_project_name(message, state):
     if message.text == "❌ Отмена":
@@ -253,8 +246,6 @@ async def message_handler(message, state):
             await admin_ideas(message)
         elif message.text == "📊 Статистика":
             await admin_stats(message)
-        elif message.text == "➕ Создать артиста":
-            await admin_create_start(message, state)
         elif message.text == "📝 Редактировать":
             await admin_edit_start(message)
         elif message.text == "🗑️ Удалить":
@@ -331,6 +322,7 @@ async def main():
         
         # COMMANDS
         dp.message.register(cmd_start, Command("start"))
+        dp.message.register(cmd_restart, Command("restart"))
         dp.message.register(cancel_any, F.text.in_({"❌ Отмена", "⬅️ Назад"}))
         
         # CALLBACKS: GENRES

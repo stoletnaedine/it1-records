@@ -26,7 +26,7 @@ def main_menu(is_admin_user=False):
     kb = [
         [KeyboardButton(text="🎲 Случайный артист")],
         [KeyboardButton(text="🎼 Выбрать по жанру")],
-        [KeyboardButton(text="➕ Добавить артиста")],
+        [KeyboardButton(text="✨ Добавить артиста")],
         [KeyboardButton(text="📋 Весь каталог")],
         [KeyboardButton(text="📀 Анонсировать релиз")],
         [KeyboardButton(text="💡 Предложить идею")]
@@ -39,7 +39,6 @@ def admin_menu():
     return ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="📋 Заявки артистов"), KeyboardButton(text="📀 Заявки релизов")],
         [KeyboardButton(text="💡 Идеи от пользователей")],
-        [KeyboardButton(text="➕ Создать артиста")], 
         [KeyboardButton(text="📝 Редактировать")],
         [KeyboardButton(text="🗑️ Удалить")], 
         [KeyboardButton(text="📊 Статистика")],
