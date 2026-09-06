@@ -1,11 +1,13 @@
 """Обработчики сообщений пользователя"""
+import asyncio
 from aiogram import types
 from aiogram.fsm.context import FSMContext
 
 from config import ADMIN_IDS, GENRES, GENRE_MAP
 from database import (
     add_bot_user, get_random_artist, get_artists_by_genre, get_all_artists,
-    get_artist_by_id, get_artist_by_user_id, add_application, add_release, add_idea, add_idea_message
+    get_artist_by_id, get_artist_by_user_id, add_application, add_release, add_idea, add_idea_message,
+    create_artist, get_all_bot_users, approve_release
 )
 from keyboards import main_menu, genre_buttons, reaction_buttons, cancel_keyboard, skip_button, admin_menu
 from utils import is_admin, format_artist_with_reactions, format_artist, normalize_links, esc
@@ -270,3 +272,31 @@ async def idea_text(message: types.Message, state: FSMContext):
             msg = f"💡 <b>Новая идея #{idea_id}</b>\n\nОт: {tg_username}\n\n{message.text}"
             await message.bot.send_message(admin_id, msg, reply_markup=kb, parse_mode="HTML")
         except: pass
+
+# ══════════════════ RESTART ══════════════════
+
+async def cmd_restart(message: types.Message, state: FSMContext):
+    """Перезагрузить бота для пользователя (очистить состояние и вернуться в главное меню)"""
+    await state.clear()
+    is_admin_user = is_admin(message.from_user.id)
+    text = """👋 Добро пожаловать в <b>it1-records</b> — музыкальный каталог нашей компании!
+
+🎵 <b>Что здесь можно делать:</b>
+
+🎧 <b>Слушай коллег</b>
+Открывай случайных артистов или ищи по жанру — рок, электроника, поп, инди. Здесь музыка твоих коллег из офиса!
+
+👍 <b>Голосуй за любимых</b>
+Нравится трек? Поставь 👍 или 🤷‍♂️ — так другие увидят, что зашло команде.
+
+➕ <b>Добавь артиста</b>
+Делаешь музыку? Подай заявку — после модерации ты попадёшь в каталог.
+
+📀 <b>Анонсируй новые релизы</b>
+Вышел свежий трек? Расскажи всем через бота — релизы разлетяются по команде.
+
+💡 <b>Предлагай идеи</b>
+Есть мысли, как улучшить бот? Пиши прямо сюда — админ ответит.
+"""
+    if is_admin_user: text += "\n🛠️ <b>Админ-панель</b> — управление заявками, артистами и релизами."
+    await message.answer(text, reply_markup=main_menu(is_admin_user), parse_mode="HTML")
