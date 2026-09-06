@@ -356,9 +356,34 @@ async def admin_delete_exec(callback_query: types.CallbackQuery):
         return
     
     artist_id = int(callback_query.data.split("_")[2])
+    
+    # Получаем данные артиста ПЕРЕД удалением
+    artist = get_artist_by_id(artist_id)
+    if not artist:
+        await callback_query.answer("❌ Артист не найден", show_alert=True)
+        return
+    
+    artist_name = artist[1]  # project_name
+    author_id = artist[7]     # tg_user_id
+    
+    # Удаляем артиста
     delete_artist(artist_id)
+    
     await callback_query.answer("✅ Удалено!")
     await callback_query.message.edit_text("✅ <b>Артист удален из каталога</b>", parse_mode="HTML")
+    
+    # Отправляем уведомление автору
+    if author_id:
+        try:
+            await callback_query.bot.send_message(
+                author_id,
+                f"❌ <b>Твой артист удален из каталога</b>\n\n"
+                f"📀 <b>{esc(artist_name)}</b> был удален админом из it1-records.\n\n"
+                f"Если у тебя есть вопросы, напиши админу.",
+                parse_mode="HTML"
+            )
+        except:
+            pass
 
 async def admin_delete_cancel(callback_query: types.CallbackQuery):
     await callback_query.answer()
