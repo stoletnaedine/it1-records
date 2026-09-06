@@ -2,12 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем зависимости и устанавливаем их
 COPY requirements.txt .
 RUN pip install -q -r requirements.txt
 
-# Копируем весь код
 COPY . .
 
-# Запускаем бота
-CMD ["python", "main.py"]
+# Отключи веб-сервер
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+
+CMD ["python3", "main.py"]

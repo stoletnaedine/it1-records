@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: it1-records-bot
+    env: python
+    plan: free
+    buildCommand: pip install -q -r requirements.txt
+    startCommand: python3 main.py
+    numInstances: 1
+    envVars:
+      - key: TELEGRAM_TOKEN
+        scope: run
+      - key: ADMIN_IDS
+        scope: run
+      - key: DATABASE_URL
+        scope: run
