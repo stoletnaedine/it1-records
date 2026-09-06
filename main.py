@@ -36,7 +36,7 @@ from keyboards import main_menu, admin_menu, cancel_keyboard, genre_buttons, ski
 from utils import is_admin, normalize_links
 from database import (
     get_pending_applications, get_pending_releases, get_open_ideas, get_all_artists,
-    create_artist, get_artist_by_user_id, add_application
+    create_artist, get_artists_by_user_id, add_application
 )
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import psycopg2

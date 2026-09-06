@@ -225,14 +225,15 @@ def get_artist_by_id(artist_id):
     conn.close()
     return artist
 
-def get_artist_by_user_id(tg_user_id):
+def get_artists_by_user_id(tg_user_id):
+    """Получить всех артистов пользователя"""
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT id, project_name, description, links, genre, about, tg_username, tg_user_id FROM artists WHERE tg_user_id = %s", (tg_user_id,))
-    artist = c.fetchone()
+    c.execute("SELECT id, project_name FROM artists WHERE tg_user_id = %s ORDER BY project_name", (tg_user_id,))
+    artists = c.fetchall()  # ← fetchall вместо fetchone
     c.close()
     conn.close()
-    return artist
+    return artists
 
 def create_artist(tg_user_id, tg_username, project_name, description, links, genre, about):
     conn = get_connection()

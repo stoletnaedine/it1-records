@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from config import ADMIN_IDS, GENRES, GENRE_MAP
 from database import (
     add_bot_user, get_random_artist, get_artists_by_genre, get_all_artists,
-    get_artist_by_id, get_artist_by_user_id, add_application, add_release, add_idea, add_idea_message,
+    get_artist_by_id, get_artists_by_user_id, add_application, add_release, add_idea, add_idea_message,
     create_artist, get_all_bot_users, approve_release
 )
 from keyboards import main_menu, genre_buttons, reaction_buttons, cancel_keyboard, skip_button, admin_menu
@@ -184,14 +184,22 @@ async def add_about(message: types.Message, state: FSMContext):
 # ══════════ ADD RELEASE ══════════
 
 async def cmd_release_start(message: types.Message, state: FSMContext):
-    artist = get_artist_by_user_id(message.from_user.id)
-    if not artist:
+    artists = get_artists_by_user_id(message.from_user.id)
+    
+    if not artists:
         await message.answer("❌ Сначала добавь себя в каталог через «✨ Добавить артиста» или дождись одобрения заявки", reply_markup=main_menu(is_admin(message.from_user.id)))
         return
     
-    await state.update_data(artist_id=artist[0])
-    await state.set_state(AddReleaseForm.release_name)
-    await message.answer("📀 <b>Анонс нового релиза</b>\n\nНазвание релиза:", reply_markup=cancel_keyboard(), parse_mode="HTML")
+    # Если только 1 артист - пропускаем выбор
+    if len(artists) == 1:
+        await state.update_data(artist_id=artists[0][0])
+        await state.set_state(AddReleaseForm.release_name)
+        await message.answer("📀 <b>Анонс нового релиза</b>\n\nНазвание релиза:", reply_markup=cancel_keyboard(), parse_mode="HTML")
+    else:
+        # Если несколько - показываем выбор
+        from keyboards import artist_select_buttons
+        await message.answer("🎵 Выбери артиста для релиза:", reply_markup=artist_select_buttons(artists))
+        await state.set_state(AddReleaseForm.selecting_artist)
 
 async def release_name(message: types.Message, state: FSMContext):
     if message.text == "❌ Отмена":
