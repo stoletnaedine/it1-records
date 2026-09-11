@@ -132,17 +132,15 @@ async def add_genre_callback(callback_query: types.CallbackQuery, state: FSMCont
     await state.update_data(genre=genre_code)
     await state.set_state(AddArtistForm.about)
     await callback_query.answer()
-    await callback_query.message.edit_text("📝 О себе (по желанию):", reply_markup=skip_button() if skip_button() else cancel_keyboard())
+    await message.answer("👤 О себе / Имя:", reply_markup=cancel_keyboard())
 
 async def add_about(message: types.Message, state: FSMContext):
     if message.text == "❌ Отмена":
         await state.clear()
         await message.answer("Отмена 👋", reply_markup=main_menu(is_admin(message.from_user.id)))
         return
-    if message.text == "↩️ Пропустить":
-        await state.update_data(about="")
-    else:
-        await state.update_data(about=message.text)
+    
+    await state.update_data(about=message.text)
     
     await state.set_state(AddArtistForm.company)
     await message.answer("🏢 Из какой ты компании?\n\n(если нет в списке, напиши текстом)", reply_markup=company_buttons())
