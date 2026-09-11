@@ -1,4 +1,4 @@
-"""Обработка ошибок и логирование"""
+"""Обработчик ошибок и логирование"""
 import traceback
 import logging
 from typing import Optional

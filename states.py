@@ -7,6 +7,7 @@ class AddArtistForm(StatesGroup):
     links = State()
     genre = State()
     about = State()
+    company = State()
 
 class CreateArtistForm(StatesGroup):
     project_name = State()
@@ -14,6 +15,7 @@ class CreateArtistForm(StatesGroup):
     links = State()
     genre = State()
     about = State()
+    company = State()
 
 class EditArtistForm(StatesGroup):
     artist_id = State()

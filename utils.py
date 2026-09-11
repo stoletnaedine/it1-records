@@ -23,16 +23,20 @@ def format_artist(data, show_id=False):
         links = data.get('links', '')
         genre = data.get('genre')
         about = data.get('about')
+        company_name = data.get('company_name', 'Другое')
     # Если это кортеж/список
     else:
         aid, project_name, description, links, genre, about = data[:6]
+        company_name = data[6] if len(data) > 6 else 'Другое'
     
-    card = f"🎵 <b>{project_name}</b>"
+    card = f"🎵 <b>{esc(project_name)}</b>"
     if show_id: 
         card += f" <code>#{aid}</code>"
-    card += f"\n📝 {esc(description)}\n🎼 {genre}"
+    card += f"\n📝 {esc(description)}\n🎵 {genre}"
     if about:
-        card += f"\n📌 {esc(about)}"
+        card += f"\n📌 {esc(about)} ({esc(company_name)})"
+    else:
+        card += f"\n📌 ({esc(company_name)})"
     card += "\n\n"
     for link in links.split(","):
         if link.strip():
@@ -50,14 +54,18 @@ def format_artist_with_reactions(artist_id, data):
         links = data.get('links', '')
         genre = data.get('genre')
         about = data.get('about')
+        company_name = data.get('company_name', 'Другое')
     # Если это кортеж/список
     else:
         aid, project_name, description, links, genre, about = data[:6]
+        company_name = data[6] if len(data) > 6 else 'Другое'
     
-    card = f"🎵 <b>{project_name}</b>\n"
-    card += f"📝 {esc(description)}\n🎼 {genre}"
+    card = f"🎵 <b>{esc(project_name)}</b>\n"
+    card += f"📝 {esc(description)}\n🎵 {genre}"
     if about:
-        card += f"\n📌 {esc(about)}"
+        card += f"\n📌 {esc(about)} ({esc(company_name)})"
+    else:
+        card += f"\n📌 ({esc(company_name)})"
     card += "\n\n"
     
     for link in links.split(","):

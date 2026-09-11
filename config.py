@@ -10,3 +10,6 @@ GENRE_MAP = {"🎸 Рок": "rock", "🔊 Электроника": "electronic",
 GENRE_NAMES = {v: k for k, v in GENRE_MAP.items()}
 
 RECENT_RELEASES_LIMIT = 1  # максимум 1 последний релиз
+
+# Компании по умолчанию
+DEFAULT_COMPANIES = ["ИТ1", "ГПБ"]

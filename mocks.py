@@ -1,4 +1,4 @@
-"""Функции для работы с мокаками (тестовые данные)"""
+"""Функции для работы с моками (тестовые данные)"""
 import psycopg2
 from config import DATABASE_URL
 
@@ -19,7 +19,7 @@ def create_mock_artists():
         ("Cyber Nova", "Электронная музыка", "https://soundcloud.com/cybernova, https://beatport.com/cybernova", "electronic", None),
         ("Velvet Storm", "Альтернативный рок", "https://spotify.com/velvetstorm, https://youtube.com/@velvetstorm", "rock", "Энергичный рок из нашего офиса"),
         ("Golden Hour", "Инди-поп", "https://instagram.com/goldenhourmusic, https://tiktok.com/@goldenhour", "indie", "Музыка про жизнь, любовь и мечты"),
-        ("Quantum Jump", "Электроника", "https://soundcloud.com/quantumjump, https://spotify.com/quantumjump", "electronic", "Экспериментальная электроника и бит-метейкинг"),
+        ("Quantum Jump", "Электроника", "https://soundcloud.com/quantumjump, https://spotify.com/quantumjump", "electronic", "Экспериментальная электроника и бит-мейтейкинг"),
         ("Crimson Waves", "Альтернативный поп", "https://bandcamp.com/crimsonwaves, https://youtube.com/@crimsonwaves", "pop", "Авторская музыка с глубокими текстами"),
     ]
     
